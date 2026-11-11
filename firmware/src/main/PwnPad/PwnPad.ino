@@ -70,15 +70,13 @@ void morseMessager(String morse, int speed);
 
 void setup(){
   initialize();
-  Serial.println("------------------------"); // TO BE REMOVED
-  modeReader(); //helps for steadier digitalRead for some reason
+  modeReader();
   challengeSelector(modeReader());
 }
 
 
 void loop()
 {
-  Serial.print(".");  // TO BE REMOVED
   delay(1000);
 }
 
@@ -113,7 +111,7 @@ int modeReader(void) {
   delay(20);
   int mode = 0;
   for (int i = 0; i < 5; i++) {
-    mode |= (bits[i] << (4 - i)); // MOD1 is the highest bit
+    mode |= (bits[i] << (4 - i));
   }
   return mode;
 }
@@ -341,8 +339,6 @@ void handheld_challenge_firmware_extraction(){
   char MorseInput[60] = {'\0'};
   int morse_index = 0;
 
-  bool flag = true;
-
   pinMode(LED_0, OUTPUT);
   pinMode(LED_1, OUTPUT);
   pinMode(LED_2, OUTPUT);
@@ -393,7 +389,7 @@ void handheld_challenge_firmware_extraction(){
     if (digitalRead(BTN_OK) == HIGH){
       delay(10);
       if (strcmp(MorseInput , SECRET) == 0){
-        Serial.println("SECTER MODE UNLOCKED: TS{F1rmw@re_S3cret}");  
+        Serial.println("SECRET MODE UNLOCKED: TS{F1rmw@re_S3cret}");
         while(true){
           digitalWrite(LED_0, HIGH);
           delay(100);
@@ -710,7 +706,8 @@ void blackbox_chain_UART_Glitch_Attack(void){
   while(1){
       Serial.flush(); 
       if (Serial.available() > 0) {
-      char provided_password[strlen(password)];
+      char provided_password[strlen(password) + 1];
+      memset(provided_password, '\0', sizeof(provided_password));
       Serial.readBytesUntil('\n', provided_password, strlen(password));
       int success = 1;
       for (int i = 0; i < strlen(password); i++) {
